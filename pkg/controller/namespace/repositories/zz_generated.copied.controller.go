@@ -61,7 +61,7 @@ const (
 func Setup(mgr ctrl.Manager, o xpcontroller.Options) error {
 	name := managed.ControllerName(v1alpha1.RepositoryKind)
 
-	opts := []managed.ReconcilerOption{
+	opts := append([]managed.ReconcilerOption{
 		managed.WithExternalConnecter(&connector{
 			kube:              mgr.GetClient(),
 			newArgocdClientFn: repositories.NewRepositoryServiceClient,
@@ -73,9 +73,7 @@ func Setup(mgr ctrl.Manager, o xpcontroller.Options) error {
 		managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name))),
 		managed.WithTimeout(5 * time.Minute),
 		managed.WithMetricRecorder(o.MetricOptions.MRMetrics),
-	}
-
-	opts = append(opts, (features.Opts(o))...)
+	}, (features.Opts(o))...)
 
 	if err := features.AddMRMetrics(mgr, o, &v1alpha1.RepositoryList{}); err != nil {
 		return err

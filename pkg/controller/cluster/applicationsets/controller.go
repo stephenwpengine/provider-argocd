@@ -58,7 +58,7 @@ func Setup(mgr ctrl.Manager, o xpcontroller.Options) error {
 func SetupWithExternalConnector(mgr ctrl.Manager, o xpcontroller.Options, ec managed.ExternalConnecter) error {
 	name := managed.ControllerName(v1alpha1.ApplicationSetKind)
 
-	opts := []managed.ReconcilerOption{
+	opts := append([]managed.ReconcilerOption{
 		managed.WithExternalConnecter(ec),
 		managed.WithPollInterval(o.PollInterval),
 		managed.WithReferenceResolver(managed.NewAPISimpleReferenceResolver(mgr.GetClient())),
@@ -67,9 +67,7 @@ func SetupWithExternalConnector(mgr ctrl.Manager, o xpcontroller.Options, ec man
 		managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name))),
 		managed.WithTimeout(5 * time.Minute),
 		managed.WithMetricRecorder(o.MetricOptions.MRMetrics),
-	}
-
-	opts = append(opts, (features.Opts(o))...)
+	}, (features.Opts(o))...)
 
 	if err := features.AddMRMetrics(mgr, o, &v1alpha1.ApplicationSetList{}); err != nil {
 		return err

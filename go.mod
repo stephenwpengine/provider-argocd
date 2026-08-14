@@ -1,6 +1,6 @@
 module github.com/crossplane-contrib/provider-argocd
 
-go 1.24.4
+go 1.26.5
 
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.19.1
